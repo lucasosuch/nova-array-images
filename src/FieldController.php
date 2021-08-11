@@ -27,17 +27,22 @@ class FieldController extends BaseController
 
             $data[] = [
                 'image' => $image->getClientOriginalName(),
-                'url' => Storage::url($savedImage)
+                'saved_path' => $savedImage,
+                'url' => Storage::disk($disk)->url($savedImage),
             ];
         }
 
         return $data;
     }
 
-    public function delete($image)
+    public function delete(Request $request, $saved_path)
     {
-        Storage::delete($image);
+        $disk = $request->disk ? $request->disk : 'local';
 
-        return "success";
+        $deleted = Storage::disk($disk)->delete($saved_path);
+
+        return $deleted === true
+            ? 'success'
+            : response('not deleted', 404);
     }
 }
