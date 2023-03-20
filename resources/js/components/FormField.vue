@@ -100,8 +100,18 @@ export default {
          * Set the initial, internal value for the field.
          */
         setInitialValue() {
-            this.value = this.field.value || '';
-            this.images = JSON.parse(this.field.value) || [];
+            if(this.field) {
+                if(Array.isArray(this.field.value)) {
+                    this.value = JSON.stringify(this.field.value) || '';
+                    this.images = this.field.value || [];
+                } else {
+                    this.value = this.field.value || '';
+                    this.images = JSON.parse(this.field.value) || [];
+                }
+            } else {
+                this.value = '';
+                this.images = [];
+            }
         },
 
         /**
